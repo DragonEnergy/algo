@@ -38,15 +38,15 @@ before_cache:
   - sudo tar cf $HOME/lxc/cache.tar /var/lib/lxd/images/
   - sudo chown $USER. $HOME/lxc/cache.tar
 
-before_script:
-  # - awesome_bot --allow-dupe --skip-save-results *.md docs/*.md --white-list paypal.com,do.co,microsoft.com,https://github.com/trailofbits/algo/archive/master.zip,https://github.com/trailofbits/algo/issues/new
-  - shellcheck algo install.sh
-  # - ansible-lint main.yml users.yml deploy_client.yml
-
 matrix:
   fast_finish: true
   include:
-    - stage: Test
+    - stage: Tests
+      name: run code checks and linters
+      script:
+        - shellcheck algo install.sh
+
+    - stage: Deploy
       name: local deployment from docker
       script:
         - docker build -t travis/algo .
@@ -67,7 +67,7 @@ matrix:
         - ./tests/local-deploy.sh
         - ./tests/update-users.sh
 
-    - stage: Test
+    - stage: Deploy
       name: cloud-init deployment
       script:
         - sudo tar xf $HOME/lxc/cache.tar -C / || echo "Didn't extract cache."
