@@ -26,6 +26,7 @@ addons:
       - python-dev
       - linux-headers-$(uname -r)
       - wireguard-dkms
+      - libxml2-utils
 
 cache:
   directories:
@@ -36,6 +37,11 @@ before_cache:
   - mkdir $HOME/lxc
   - sudo tar cf $HOME/lxc/cache.tar /var/lib/lxd/images/
   - sudo chown $USER. $HOME/lxc/cache.tar
+
+before_script:
+  # - awesome_bot --allow-dupe --skip-save-results *.md docs/*.md --white-list paypal.com,do.co,microsoft.com,https://github.com/trailofbits/algo/archive/master.zip,https://github.com/trailofbits/algo/issues/new
+  - shellcheck algo install.sh
+  # - ansible-lint main.yml users.yml deploy_client.yml
 
 matrix:
   fast_finish: true
@@ -78,11 +84,6 @@ matrix:
             sleep 30;
           done
         - sudo lxc exec algo -- test -f /opt/algo/configs/localhost/.config.yml
-
-# script:
-  # - awesome_bot --allow-dupe --skip-save-results *.md docs/*.md --white-list paypal.com,do.co,microsoft.com,https://github.com/trailofbits/algo/archive/master.zip,https://github.com/trailofbits/algo/issues/new
-# - shellcheck algo
-# - ansible-lint main.yml users.yml deploy_client.yml
 
 notifications:
   email: false
