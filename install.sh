@@ -85,6 +85,7 @@ deployAlgo() {
   export ANSIBLE_LOCAL_TEMP=/root/.ansible/tmp
   export ANSIBLE_REMOTE_TEMP=/root/.ansible/tmp
 
+  # shellcheck disable=SC2086
   ansible-playbook main.yml \
     -e provider=local \
     -e "ondemand_cellular=${ONDEMAND_CELLULAR}" \
@@ -99,7 +100,7 @@ deployAlgo() {
     -e server=localhost \
     -e ssh_user=root \
     -e "${EXTRA_VARS}" \
-    --skip-tags debug "${ANSIBLE_EXTRA_ARGS}" |
+    --skip-tags debug ${ANSIBLE_EXTRA_ARGS} |
       tee /var/log/algo.log
 }
 
